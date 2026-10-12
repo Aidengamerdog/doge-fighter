@@ -139,7 +139,7 @@ class Doge:
 ║ ATK: {self.attack}  |  DEF: {self.defense}
 ║ SP.ATK: {self.sp_attack}  |  SP.DEF: {self.sp_defense}
 ║ SPD: {self.speed}
-╚════════════════════════════════════════╝
+╚═════════════════════════════════════��══╝
         """
     
     def get_moves_list(self):
@@ -151,3 +151,54 @@ class Doge:
     
     def __str__(self):
         return f"{self.name} (Lv. {self.level}) - HP: {self.hp}/{self.max_hp}"
+
+
+class DogeUICharacter:
+    """A simple terminal-based UI sprite for the Doge fighter."""
+
+    def __init__(self, doge):
+        self.doge = doge
+
+    def get_sprite(self):
+        return r"""
+                   ___
+              .-"   "-.
+             /  o o  \
+             |   ^    |
+             |  ---   |
+              \  --- /
+               `-.__.-'
+                 / \\
+                /   \\
+         ___..__..___
+        /  .-..-.  \\
+       /  /  __  \\
+       \_\  \__/  /_
+            `-.__.-'
+        """
+
+    def render_panel(self):
+        bar_length = 20
+        hp_ratio = self.doge.hp / self.doge.max_hp
+        filled = max(0, min(bar_length, int(hp_ratio * bar_length)))
+        health_bar = "█" * filled + "░" * (bar_length - filled)
+
+        print("\n" + "=" * 40)
+        print(f"{self.doge.name.upper()}  |  LVL {self.doge.level}")
+        print(f"HP: [{health_bar}] {self.doge.hp}/{self.doge.max_hp}")
+        print(f"ATK: {self.doge.attack}  DEF: {self.doge.defense}  SPD: {self.doge.speed}")
+        print(self.get_sprite())
+        print("Moves:")
+        for idx, move in enumerate(self.doge.moves, 1):
+            print(f"  {idx}. {move.name}  PP:{move.pp}/{move.max_pp}")
+        print("=" * 40)
+
+    def render_battle_scene(self, opponent_name="Enemy"):
+        print(f"\n\nBattle vs {opponent_name}")
+        self.render_panel()
+
+
+if __name__ == "__main__":
+    doge = Doge("Much Doge")
+    ui = DogeUICharacter(doge)
+    ui.render_battle_scene("Very Serious Cat")
